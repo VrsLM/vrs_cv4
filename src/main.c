@@ -2,6 +2,9 @@
 #include <stddef.h>
 #include "stm32l1xx.h"
 
+uint16_t  AD_value;
+int value;
+
 void led_init(void) {
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 	GPIO_InitTypeDef GPIO_InitStruct;
@@ -14,6 +17,13 @@ void led_init(void) {
 	GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
+uint16_t readValue(void) {
+	ADC_SoftwareStartConv(ADC1);
+	while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) {	}
+
+	AD_value = ADC_GetConversionValue(ADC1);
+	return AD_value;
+}
 
 void adc_init(void) {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -21,7 +31,7 @@ void adc_init(void) {
 	/* Enable GPIO clock */
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE); //Opraviù a upraviù
 	/* Configure ADCx Channel 2 as analog input */
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -42,7 +52,7 @@ void adc_init(void) {
 	ADC_InitStructure.ADC_NbrOfConversion = 1;
 	ADC_Init(ADC1, &ADC_InitStructure);
 	/* ADCx regular channel8 configuration */
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_2, 1, ADC_SampleTime_16Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_1, 1, ADC_SampleTime_16Cycles);
 	/* Enable the ADC */
 	ADC_Cmd(ADC1, ENABLE);
 	/* Wait until the ADC1 is ready */
@@ -52,7 +62,11 @@ void adc_init(void) {
 	ADC_SoftwareStartConv(ADC1);
 }
 
-uint16_t  AD_value;
+void delay(int i){
+	for (int x = 0; x < i; x++) {
+
+	}
+}
 
 int main(void) {
 	adc_init();
@@ -61,13 +75,7 @@ int main(void) {
 	GPIO_WriteBit(GPIOA, GPIO_Pin_5, Bit_SET);
 	while (1) {
 
-		/* Start ADC Software Conversion */
-		ADC_SoftwareStartConv(ADC1);
-		while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) {
 		}
-		AD_value = ADC_GetConversionValue(ADC1);
-		printf("ad_value = %d", AD_value);
-
 	}
 	return 0;
 }
