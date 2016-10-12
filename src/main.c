@@ -72,9 +72,25 @@ int main(void) {
 	adc_init();
 	led_init();
 
-	GPIO_WriteBit(GPIOA, GPIO_Pin_5, Bit_SET);
 	while (1) {
+		value = readValue();
 
+		if (value < 2050) {
+			delay(50000);
+			GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		} else if (2800 < value && value < 3000) {
+			delay(100000);
+			GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		} else if (3400 < value && value < 3500) {
+			delay(800000);
+			GPIO_ToggleBits(GPIOA, GPIO_Pin_5);
+		} else if (3600 < value && value < 3700) {
+			delay(1000000);
+			GPIO_WriteBit(GPIOA, GPIO_Pin_5, Bit_RESET);
+			delay(50000);
+			GPIO_WriteBit(GPIOA, GPIO_Pin_5, Bit_SET);
+		} else if (3700 < value) {
+			GPIO_WriteBit(GPIOA, GPIO_Pin_5, Bit_RESET);
 		}
 	}
 	return 0;
