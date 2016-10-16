@@ -28,8 +28,6 @@ uint16_t readValue(void) {
 void adc_init(void) {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	ADC_InitTypeDef ADC_InitStructure;
-	/* Enable GPIO clock */
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE); //Opraviù a upraviù
 	/* Configure ADCx Channel 2 as analog input */
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
